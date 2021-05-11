@@ -1,9 +1,8 @@
 package gobits
 
 type Segment struct {
-	Writer
+	ReadWriter
 	WriterTo
-	Reader
 	ReaderFrom
 	b *Slice
 }

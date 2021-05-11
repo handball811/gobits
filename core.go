@@ -58,3 +58,8 @@ type Reader interface {
 type ReaderFrom interface {
 	ReadFrom(s Reader) error
 }
+
+type ReadWriter interface {
+	Reader
+	Writer
+}
