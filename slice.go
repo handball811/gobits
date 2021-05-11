@@ -1,9 +1,5 @@
 package gobits
 
-//TODO: Autoscaling
-//TODO: AsInterface
-//TODO: RingBuffer
-
 type Slice struct {
 	buffer []byte
 	top    int
@@ -37,14 +33,27 @@ func (b *Slice) Len() int {
 }
 
 func (b *Slice) Cap() int {
-	return len(b.buffer) << 3
+	return len(b.buffer)<<3 - b.top
 }
 
+// must be
+// top >= 0 && bot >= top
 func (b *Slice) Sub(top, bot int) *Slice {
-	// TODO: Rescale
+	if top < 0 || bot < top {
+		return nil
+	}
 	return &Slice{
 		buffer: b.buffer,
 		top:    b.top + top,
-		bot:    b.bot + bot,
+		bot:    b.top + bot,
 	}
+}
+
+func (b *Slice) Move(top, bot int) bool {
+	if top < 0 || bot < top {
+		return false
+	}
+	b.bot = b.top + bot
+	b.top += top
+	return true
 }

@@ -1,5 +1,9 @@
 package gobits
 
+//TODO: Autoscaling
+//TODO: AsInterface
+//TODO: RingBuffer
+// Segment is a most simple slice handling system
 type Segment struct {
 	ReadWriter
 	WriterTo
@@ -7,16 +11,16 @@ type Segment struct {
 	b *Slice
 }
 
-func NewSegmentWithSize(bufferSize int) *Segment {
-	return NewSegment(
-		NewSlice(
-			make([]byte, bufferSize), 0, 0))
-}
-
 func NewSegment(b *Slice) *Segment {
 	return &Segment{
 		b: b,
 	}
+}
+
+func NewSegmentWithSize(bufferSize int) *Segment {
+	return NewSegment(
+		NewSlice(
+			make([]byte, bufferSize), 0, 0))
 }
 
 func (s *Segment) Write(b *Slice) (int, error) {
