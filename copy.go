@@ -1,3 +1,5 @@
+//go:generate go run cmd/asm/main.go -out add.s -stubs stub.go
+
 package gobits
 
 // Copy copies buffer from src to dst
@@ -59,17 +61,35 @@ func Copy(
 			dstOffset += copyLen
 			srcOffset += copyLen
 		} else {
-			lf := InlineByteFilter[copyLen<<3|slo]
-			rf := InlineByteFilter[(8-copyLen)<<3]
-			for size >= 8 {
-				dst[dli] = ((src[sli] & lf) >> slo) | ((src[sli+1] & rf) << copyLen)
-				size -= 8
-				dstOffset += 8
-				srcOffset += 8
-				sli++
-				dli++
-			}
+
+			sz := Slide(
+				dst[dli:],
+				src[sli:],
+				InlineByteFilter[copyLen<<3|slo],
+				InlineByteFilter[(8-copyLen)<<3],
+				slo,
+				size)
+			//fil := InlineByteFilter[copyLen<<3|slo]
+			//sz := int(SlideCopy(dst[dli:], src[sli:], fil, (^fil)<<(8-slo), uint64(size)))
+			size -= sz << 3
+			dstOffset += sz << 3
+			srcOffset += sz << 3
+			sli += sz
+			dli += sz
 		}
 	}
 	return nil
+}
+
+func Slide(dst, src []byte, lf, rf byte, shift, size int) int {
+	dli := 0
+	sli := 0
+	copyLen := 8 - shift
+	for size >= 8 {
+		dst[dli] = ((src[sli] & lf) >> shift) | ((src[sli+1] & rf) << copyLen)
+		dli++
+		sli++
+		size -= 8
+	}
+	return dli
 }

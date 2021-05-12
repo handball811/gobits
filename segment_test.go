@@ -312,11 +312,30 @@ func BenchmarkCopyPartial16Byte(b *testing.B) {
 }
 
 // Collect 127bit*64 -> readBuffer
-// 2751 ns/op	       0 B/op	       0 allocs/op
+// 2453 ns/op	       0 B/op	       0 allocs/op
 func BenchmarkSegmentCollection(b *testing.B) {
 	writeBuffers := make([]*Slice, 64)
 	for i := range writeBuffers {
 		writeBuffers[i] = NewSlice(make([]byte, 16), 0, 127)
+	}
+	segment := NewSegmentWithSize(1300)
+	readSegment := NewSegmentWithSize(1300)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		segment.Reset()
+		for _, buffer := range writeBuffers {
+			segment.Write(buffer)
+		}
+		segment.WriteTo(readSegment)
+	}
+}
+
+// Collect 2047bit*4 -> readBuffer
+// 1501 ns/op	       0 B/op	       0 allocs/op
+func BenchmarkSegmentCollection2(b *testing.B) {
+	writeBuffers := make([]*Slice, 4)
+	for i := range writeBuffers {
+		writeBuffers[i] = NewSlice(make([]byte, 256), 0, 2047)
 	}
 	segment := NewSegmentWithSize(1300)
 	readSegment := NewSegmentWithSize(1300)
