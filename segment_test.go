@@ -154,7 +154,7 @@ func TestSegmentRead(t *testing.T) {
 	slice0 := NewSliceWithBuffer([]byte{1, 2, 3, 4, 5, 6, 7, 8, 9})
 	segment.Write(slice0)
 	readBuffer := make([]byte, 64)
-	readSlice := NewSlice(readBuffer, 8, 40)
+	readSlice := NewSlice(readBuffer, 8, 8, 40)
 
 	size, err = segment.Read(readSlice)
 	assert.Nil(t, err)
@@ -316,7 +316,7 @@ func BenchmarkCopyPartial16Byte(b *testing.B) {
 func BenchmarkSegmentCollection(b *testing.B) {
 	writeBuffers := make([]*Slice, 64)
 	for i := range writeBuffers {
-		writeBuffers[i] = NewSlice(make([]byte, 16), 0, 127)
+		writeBuffers[i] = NewSlice(make([]byte, 16), 0, 127, 128)
 	}
 	segment := NewSegmentWithSize(1300)
 	readSegment := NewSegmentWithSize(1300)
@@ -335,7 +335,7 @@ func BenchmarkSegmentCollection(b *testing.B) {
 func BenchmarkSegmentCollection2(b *testing.B) {
 	writeBuffers := make([]*Slice, 4)
 	for i := range writeBuffers {
-		writeBuffers[i] = NewSlice(make([]byte, 256), 0, 2047)
+		writeBuffers[i] = NewSlice(make([]byte, 256), 0, 2047, 2048)
 	}
 	segment := NewSegmentWithSize(1300)
 	readSegment := NewSegmentWithSize(1300)
