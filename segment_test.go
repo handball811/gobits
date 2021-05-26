@@ -154,7 +154,7 @@ func TestSegmentRead(t *testing.T) {
 	slice0 := NewSliceWithBuffer([]byte{1, 2, 3, 4, 5, 6, 7, 8, 9})
 	segment.Write(slice0)
 	readBuffer := make([]byte, 64)
-	readSlice := NewSlice(readBuffer, 8, 40, 40)
+	readSlice := NewSlice(readBuffer, 8, 8, 40)
 
 	size, err = segment.Read(readSlice)
 	assert.Nil(t, err)
