@@ -20,7 +20,7 @@ func NewSegment(b *Slice) *Segment {
 func NewSegmentWithSize(bufferSize int) *Segment {
 	return NewSegment(
 		NewSlice(
-			make([]byte, bufferSize), 0, 0))
+			make([]byte, bufferSize), 0, 0, bufferSize<<3))
 }
 
 func (s *Segment) Write(b *Slice) (int, error) {
@@ -42,7 +42,7 @@ func (s *Segment) ReadFrom(r Reader) error {
 }
 
 func (s *Segment) Read(b *Slice) (int, error) {
-	size := b.Len()
+	size := b.RemainLen()
 	if size > s.Len() {
 		size = s.Len()
 	}
@@ -60,14 +60,13 @@ func (s *Segment) WriteTo(w Writer) error {
 }
 
 func (s *Segment) Len() int {
-	return s.b.bot - s.b.top
+	return s.b.Len()
 }
 
 func (s *Segment) RemainLen() int {
-	return (len(s.b.buffer) << 3) - s.b.bot
+	return s.b.RemainLen()
 }
 
 func (s *Segment) Reset() {
-	s.b.top = 0
-	s.b.bot = 0
+	s.b.Move(0, 0)
 }

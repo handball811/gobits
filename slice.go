@@ -4,17 +4,20 @@ type Slice struct {
 	buffer []byte
 	top    int
 	bot    int
+	cap    int
 }
 
 func NewSlice(
 	buffer []byte,
 	top int,
 	bot int,
+	cap int,
 ) *Slice {
 	return &Slice{
 		buffer: buffer,
 		top:    top,
 		bot:    bot,
+		cap:    cap,
 	}
 }
 
@@ -25,6 +28,7 @@ func NewSliceWithBuffer(
 		buffer: buffer,
 		top:    0,
 		bot:    len(buffer) << 3,
+		cap:    len(buffer) << 3,
 	}
 }
 
@@ -32,8 +36,8 @@ func (b *Slice) Len() int {
 	return b.bot - b.top
 }
 
-func (b *Slice) Cap() int {
-	return len(b.buffer)<<3 - b.top
+func (b *Slice) RemainLen() int {
+	return b.cap - b.bot
 }
 
 // must be
@@ -46,6 +50,7 @@ func (b *Slice) Sub(top, bot int) *Slice {
 		buffer: b.buffer,
 		top:    b.top + top,
 		bot:    b.top + bot,
+		cap:    b.cap,
 	}
 }
 
