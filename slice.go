@@ -62,3 +62,8 @@ func (b *Slice) Move(top, bot int) bool {
 	b.top += top
 	return true
 }
+
+func (b *Slice) Reset() {
+	b.top = 0
+	b.bot = 0
+}
