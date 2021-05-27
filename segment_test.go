@@ -223,6 +223,18 @@ func TestSegmentReadFromWithErrorAndSize(t *testing.T) {
 	assert.Equal(t, mock.err, err)
 }
 
+func TestResetWithWrite(t *testing.T) {
+	segment := NewSegment(NewSlice([]byte{1, 2, 3, 4, 5, 6, 7, 8}, 0, 0, 64))
+	mock := &mockReader{
+		ret: 23,
+	}
+	segment.ReadFrom(mock)
+	segment.Reset()
+	segment.ReadFrom(mock)
+	assert.Equal(t, 23, segment.Len())
+	assert.Equal(t, 64-23, segment.RemainLen())
+}
+
 ///
 /// WriteToTest
 ///

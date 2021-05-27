@@ -68,5 +68,5 @@ func (s *Segment) RemainLen() int {
 }
 
 func (s *Segment) Reset() {
-	s.b.Move(0, 0)
+	s.b.Reset()
 }
