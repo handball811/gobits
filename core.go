@@ -42,20 +42,24 @@ func init() {
 }
 
 type Writer interface {
+	// b の内容を自身に書き込む
 	// offset, size [bit]
 	Write(b *Slice) (int, error)
 }
 
 type WriterTo interface {
+	// 自身の内容を s に書き込む
 	WriteTo(s Writer) error
 }
 
 type Reader interface {
+	// 内容を b に読み込む
 	// offset, size [bit]
 	Read(b *Slice) (int, error)
 }
 
 type ReaderFrom interface {
+	// s の内容を読み込んで自身に読み込む
 	ReadFrom(s Reader) error
 }
 

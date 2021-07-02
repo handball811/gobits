@@ -1,7 +1,5 @@
 package gobits
 
-//TODO: Autoscaling
-//TODO: AsInterface
 //TODO: RingBuffer
 // Segment is a most simple slice handling system
 type Segment struct {
